@@ -98,10 +98,8 @@ dEdTbar(4)=(nanmean(ParW.Eo)-nanmean(ParC.Eo))/15; % Intraspecific mean #2
 
 % Get Egas, Event, Ecirc
 load Es
-% Fish MMR/RMR
-load MMR_RMR
-% SMR (Marine & Terrestrial)
-load SMS
+% SMS+FAS (Marine & Terrestrial)
+load FAS
 
 %% Global T/O2 Fields
         
@@ -120,19 +118,24 @@ TOvol=bin.P;
 
 pct=[0 1 5:5:95 99 100]; 
 pctmin=[5 10];
-Phi_min=ones(length(Par.B),length(pctmin))*nan;
-Phi_max=ones(length(Par.B),length(pctmin))*nan;
-F_PhiT=ones(length(Par.B),1)*nan;
-F_PhiO=ones(length(Par.B),1)*nan;
-Thist=ones(length(Par.B),length(pct))*nan; Ohist=Thist; PO2hist=Thist; Zhist=Thist;
-Tmax=ones(length(Par.B),length(pct))*nan; T_atPatm=Thist;
-Phic_Fssp=ones(length(Par.B),1)*nan;Phic_Fsspm=Phic_Fssp; Phic_F4d=Phic_Fssp;
-Fbeta=ones(length(Par.B),1)*0.5; tmin=10;
+tmin=10;
+brange=[0.5:.25:1];
 
 try
 %    uncomment this line to recompute Pobis
     load Pobis.mat
 catch
+    Phi_min=ones(length(Par.B),length(pctmin))*nan;
+    Phi_max=ones(length(Par.B),length(pctmin))*nan;
+    F_PhiT=ones(length(Par.B),1)*nan;F_PhiT_4d=F_PhiT;
+    F_PhiO=ones(length(Par.B),1)*nan;F_PhiO_4d=F_PhiO;
+    Nobs_fracbelow1=ones(length(Par.B),1)*nan;
+    Thist=ones(length(Par.B),length(pct))*nan; Ohist=Thist; PO2hist=Thist; Zhist=Thist;
+    Tmax=ones(length(Par.B),length(pct))*nan; T_atPatm=Tmax;
+    Phic_Fssp=ones(length(Par.B),length(brange))*nan;Phic_Fsspm=Phic_Fssp; Phic_F4d=Phic_Fssp;
+    Fmax_ssp=Phic_Fssp; Fmax_sspm=Phic_Fssp;
+    Fmaxt_ssp=Phic_Fssp; Fmaxt_sspm=Phic_Fssp;
+    Fmaxo_ssp=Phic_Fssp; Fmaxo_sspm=Phic_Fssp;
     for i=1:length(Par.Species_unq)
         spec1=Par.Species_unq(i);
         fname=strrep(spec1{1},' ','_')
@@ -190,9 +193,6 @@ end
 
 %% ATmax
 
-% Use histogram-based phi_crit
-Pobis.phi_crit=Pobis.phic_hist;
-
 clear Tc Ta Ta2
 for i=1:length(dEdTbar)
 Par.dEdT=ones(size(Par.B))*dEdTbar(i); 
@@ -220,7 +220,6 @@ Ta_combo=Ta; Ta_combo(I)=Ta2(I);
 
 % Main figs
 MI_traits_Figs
-
 
 
 
